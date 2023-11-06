@@ -20,8 +20,8 @@ jobs:
         with:
           gradle-version: 8.2.1
 
-      - run: ./gradlew checkstyleMain checkstyleTest
-      - run: ./gradlew test
+      - run: make lint
+      - run: make test
 
       - name: Publish code coverage
         uses: paambaati/codeclimate-action@v5.0.0
@@ -30,5 +30,5 @@ jobs:
           JACOCO_SOURCE_PATH: app/src/main/java
         with:
           debug: true
-          coverageCommand: ./gradlew jacocoTestReport
+          coverageCommand: make report
           coverageLocations: ${{github.workspace}}/app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
