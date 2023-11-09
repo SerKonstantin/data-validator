@@ -9,8 +9,7 @@ public class StringSchema {
     private final Map<String, List<Object>> requirements = new HashMap<>();
 
     public boolean isValid(Object input) {
-        // Check if input is String or null
-        if (!(input == null || input instanceof String)) {
+        if (!isValidInput(input)) {
             return false;
         }
 
@@ -35,6 +34,7 @@ public class StringSchema {
         return isAllChecksPass;
     }
 
+    // Section with methods to set up checking requirements
     public StringSchema required() {
         requirements.computeIfAbsent("required", value -> new ArrayList<>()).add(true);
         return this;
@@ -50,23 +50,26 @@ public class StringSchema {
         return this;
     }
 
+    // Section with methods to check each condition from requirements
+    private boolean isValidInput(Object input) {
+        return input == null || input instanceof String;
+    }
+
     private boolean checkRequired(Object input) {
         return !(input == null || input.equals(""));
     }
 
     private boolean checkMinLength(Object length, Object input) {
-        try {
-            return input.toString().length() >= (int) length;
-        } catch (Exception e) {
+        if (!(input instanceof String) || !(length instanceof Integer)) {
             return false;
         }
+        return input.toString().length() >= (int) length;
     }
 
     private boolean checkSubstring(Object substring, Object input) {
-        try {
-            return input.toString().contains((String) substring);
-        } catch (Exception e) {
+        if (!(input instanceof String) || !(substring instanceof String)) {
             return false;
         }
+        return input.toString().contains((String) substring);
     }
 }
