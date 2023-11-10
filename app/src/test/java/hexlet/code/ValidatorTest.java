@@ -15,9 +15,13 @@ class ValidatorTest {
         StringSchema schema = v.string();
 
         assertFalse(schema.isValid(5));
-
         assertTrue(schema.isValid(""));
         assertTrue(schema.isValid(null));
+
+        schema.minLength(1);
+        assertTrue(schema.isValid(null));
+        assertFalse(schema.isValid(""));
+
         schema.required();
         assertFalse(schema.isValid(""));
         assertFalse(schema.isValid(null));
@@ -43,19 +47,16 @@ class ValidatorTest {
         assertTrue(schema.isValid(null));
 
         schema.positive();
-
         assertFalse(schema.isValid(0));
         assertTrue(schema.isValid(null));
         assertFalse(schema.isValid(-10));
         assertTrue(schema.isValid(10));
 
         schema.required();
-
         assertFalse(schema.isValid(null));
 
         schema.range(10, 5);
         schema.range(6, 9);
-
         assertTrue(schema.isValid(6));
         assertTrue(schema.isValid(9));
         assertFalse(schema.isValid(5));

@@ -13,8 +13,6 @@ public class StringSchema {
             return false;
         }
 
-        boolean isAllChecksPass = true;
-
         for (Map.Entry<String, List<Object>> entry : requirements.entrySet()) {
             String typeOfCheck = entry.getKey();
             List<Object> parameters = entry.getValue();
@@ -27,11 +25,11 @@ public class StringSchema {
             };
 
             if (!isCurrentCheckPass) {
-                isAllChecksPass = false;
+                return false;
             }
         }
 
-        return isAllChecksPass;
+        return true;
     }
 
     // Section with methods to set up checking requirements
@@ -60,6 +58,10 @@ public class StringSchema {
     }
 
     private boolean checkMinLength(Object length, Object input) {
+        if (input == null) {
+            return true;
+        }
+
         if (!(input instanceof String) || !(length instanceof Integer)) {
             return false;
         }
@@ -67,6 +69,10 @@ public class StringSchema {
     }
 
     private boolean checkSubstring(Object substring, Object input) {
+        if (input == null) {
+            return true;
+        }
+
         if (!(input instanceof String) || !(substring instanceof String)) {
             return false;
         }
