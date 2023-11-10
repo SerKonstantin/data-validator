@@ -13,8 +13,6 @@ public class NumberSchema {
             return false;
         }
 
-        boolean isAllChecksPass = true;
-
         for (Map.Entry<String, List<Object>> entry : requirements.entrySet()) {
             String typeOfCheck = entry.getKey();
             List<Object> parameters = entry.getValue();
@@ -27,11 +25,11 @@ public class NumberSchema {
             };
 
             if (!isCurrentCheckPass) {
-                isAllChecksPass = false;
+                return false;
             }
         }
 
-        return isAllChecksPass;
+        return true;
     }
 
     // Section with methods to set up checking requirements
@@ -71,11 +69,7 @@ public class NumberSchema {
         if (input == null) {
             return true;
         }
-
-        if (!(input instanceof Integer)) {
-            return false;
-        }
-        return (int) input > 0;
+        return input instanceof Integer && (int) input > 0;
     }
 
     private boolean checkRange(Object range, Object input) {
@@ -83,13 +77,12 @@ public class NumberSchema {
             return true;
         }
 
-        if (!(input instanceof Integer) || !(range instanceof int[])) {
+        if (!(input instanceof Integer) || !(range instanceof int[] rangeBorders)) {
             return false;
         }
         int value = (int) input;
-        int[] tmpArr = (int[]) range;
-        int start = tmpArr[0];
-        int end = tmpArr[1];
+        int start = rangeBorders[0];
+        int end = rangeBorders[1];
 
         return (start <= value && value <= end);
     }
