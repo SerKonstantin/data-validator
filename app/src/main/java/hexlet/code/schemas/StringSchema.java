@@ -4,9 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 
 public class StringSchema {
     private final Map<String, List<Object>> requirements = new HashMap<>();
+    private final Map<String, BiPredicate<Object, Object>> checkMethods = Map.of(
+            "required", this::checkRequired,
+            "minLength", this::checkMinLength,
+            "substring", this::checkSubstring
+    );
 
     public boolean isValid(Object input) {
         if (!isValidInput(input)) {
@@ -16,14 +22,7 @@ public class StringSchema {
         for (Map.Entry<String, List<Object>> entry : requirements.entrySet()) {
             String typeOfCheck = entry.getKey();
             List<Object> parameters = entry.getValue();
-
-            boolean isCurrentCheckPass = switch (typeOfCheck) {
-                case "required" -> checkRequired(input);
-                case "minLength" -> parameters.stream().allMatch(parameter -> checkMinLength(parameter, input));
-                case "substring" -> parameters.stream().allMatch(parameter -> checkSubstring(parameter, input));
-                default -> throw new RuntimeException();
-            };
-
+            boolean isCurrentCheckPass = checkMethods.get(typeOfCheck).test(parameters, input);
             if (!isCurrentCheckPass) {
                 return false;
             }
@@ -53,29 +52,47 @@ public class StringSchema {
         return input == null || input instanceof String;
     }
 
-    private boolean checkRequired(Object input) {
+    private boolean checkRequired(Object parameters, Object input) {
         return !(input == null || input.equals(""));
     }
 
-    private boolean checkMinLength(Object length, Object input) {
+    private boolean checkMinLength(Object listOfLengths, Object input) {
         if (input == null) {
             return true;
         }
-
-        if (!(input instanceof String) || !(length instanceof Integer)) {
+        if (!(input instanceof String) || !(listOfLengths instanceof List<?> lengths)) {
             return false;
         }
-        return input.toString().length() >= (int) length;
+
+        for (Object length : lengths) {
+            if (!(length instanceof Integer)) {
+                return false;
+            }
+            if (input.toString().length() < (int) length) {
+                return  false;
+            }
+        }
+
+        return true;
     }
 
-    private boolean checkSubstring(Object substring, Object input) {
+    private boolean checkSubstring(Object listOfSubstrings, Object input) {
         if (input == null) {
             return true;
         }
-
-        if (!(input instanceof String) || !(substring instanceof String)) {
+        if (!(input instanceof String) || !(listOfSubstrings instanceof List<?> substrings)) {
             return false;
         }
-        return input.toString().contains((String) substring);
+
+        for (Object substring : substrings) {
+            if (!(substring instanceof String)) {
+                return false;
+            }
+            if (!input.toString().contains((String) substring)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
