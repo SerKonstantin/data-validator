@@ -4,9 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 
 public class NumberSchema {
     private final Map<String, List<Object>> requirements = new HashMap<>();
+    private final Map<String, BiPredicate<Object, Object>> checkMethods = Map.of(
+            "required", this::checkRequired,
+            "positive", this::checkPositive,
+            "range", this::checkRange
+    );
 
     public boolean isValid(Object input) {
         if (!isValidInput(input)) {
@@ -16,14 +22,7 @@ public class NumberSchema {
         for (Map.Entry<String, List<Object>> entry : requirements.entrySet()) {
             String typeOfCheck = entry.getKey();
             List<Object> parameters = entry.getValue();
-
-            boolean isCurrentCheckPass = switch (typeOfCheck) {
-                case "required" -> checkRequired(input);
-                case "positive" -> checkPositive(input);
-                case "range" -> parameters.stream().allMatch(parameter -> checkRange(parameter, input));
-                default -> throw new RuntimeException();
-            };
-
+            boolean isCurrentCheckPass = checkMethods.get(typeOfCheck).test(parameters, input);
             if (!isCurrentCheckPass) {
                 return false;
             }
@@ -61,29 +60,38 @@ public class NumberSchema {
         return input == null || input instanceof Integer;
     }
 
-    private boolean checkRequired(Object input) {
+    private boolean checkRequired(Object parameters, Object input) {
         return !(input == null);
     }
 
-    private boolean checkPositive(Object input) {
+    private boolean checkPositive(Object parameters, Object input) {
         if (input == null) {
             return true;
         }
         return input instanceof Integer && (int) input > 0;
     }
 
-    private boolean checkRange(Object range, Object input) {
+    private boolean checkRange(Object listOfRanges, Object input) {
         if (input == null) {
             return true;
         }
-
-        if (!(input instanceof Integer) || !(range instanceof int[] rangeBorders)) {
+        if (!(input instanceof Integer) || !(listOfRanges instanceof List<?> ranges)) {
             return false;
         }
-        int value = (int) input;
-        int start = rangeBorders[0];
-        int end = rangeBorders[1];
 
-        return (start <= value && value <= end);
+        int value = (int) input;
+        for (Object range : ranges) {
+            if (!(range instanceof int[])) {
+                return false;
+            }
+            int start = ((int[]) range)[0];
+            int end = ((int[]) range)[1];
+
+            if (value < start || value > end) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
