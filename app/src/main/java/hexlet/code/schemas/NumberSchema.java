@@ -1,37 +1,17 @@
 package hexlet.code.schemas;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.BiPredicate;
 
-public class NumberSchema {
-    private final Map<String, List<Object>> requirements = new HashMap<>();
-    private final Map<String, BiPredicate<Object, Object>> checkMethods = Map.of(
-            "required", this::checkRequired,
-            "positive", this::checkPositive,
-            "range", this::checkRange
-    );
-
-    public boolean isValid(Object input) {
-        if (!isValidInput(input)) {
-            return false;
-        }
-
-        for (Map.Entry<String, List<Object>> entry : requirements.entrySet()) {
-            String typeOfCheck = entry.getKey();
-            List<Object> parameters = entry.getValue();
-            boolean isCurrentCheckPass = checkMethods.get(typeOfCheck).test(parameters, input);
-            if (!isCurrentCheckPass) {
-                return false;
-            }
-        }
-
-        return true;
+public class NumberSchema extends BaseSchema {
+    // Section to populate checkMethods (map located in superclass)
+    {
+        checkMethods.put("required", this::checkRequired);
+        checkMethods.put("positive", this::checkPositive);
+        checkMethods.put("range", this::checkRange);
     }
 
-    // Section with methods to set up checking requirements
+    // Section with methods to populate checking requirements (map located in superclass)
     public NumberSchema required() {
         requirements.computeIfAbsent("required", value -> new ArrayList<>()).add(true);
         return this;
@@ -56,7 +36,7 @@ public class NumberSchema {
     }
 
     // Section with methods to check each condition from requirements
-    private boolean isValidInput(Object input) {
+    protected boolean isValidInput(Object input) {
         return input == null || input instanceof Integer;
     }
 
