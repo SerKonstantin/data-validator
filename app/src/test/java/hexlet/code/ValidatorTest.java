@@ -1,8 +1,12 @@
 package hexlet.code;
 
+import hexlet.code.schemas.MapSchema;
 import hexlet.code.schemas.NumberSchema;
 import hexlet.code.schemas.StringSchema;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -63,4 +67,30 @@ class ValidatorTest {
         assertFalse(schema.isValid(10));
     }
 
+    @Test
+    public void validatorMapTest() {
+        Validator v = new Validator();
+        MapSchema schema = v.map();
+
+        assertTrue(schema.isValid(null));
+
+        schema.required();
+
+        assertFalse(schema.isValid(null));
+        Map<String, Object> data = new HashMap<>();
+        assertTrue(schema.isValid(data));
+        data.put("firstKey", Map.of("innerKey", 5));
+        assertTrue(schema.isValid(data));
+
+        schema.sizeOf(2);
+        assertFalse(schema.isValid(data));
+        data.put("secondKey", 8);
+        assertTrue(schema.isValid(data));
+        data.put("thirdKey", "value");
+        assertFalse(schema.isValid(data));
+
+        // Add new check to the list of checks, but it's not replacing previous sizeOf(2)
+        schema.sizeOf(3);
+        assertFalse(schema.isValid(data));
+    }
 }
