@@ -48,30 +48,24 @@ public class NumberSchema extends BaseSchema {
         if (input == null) {
             return true;
         }
-        return input instanceof Integer && (int) input > 0;
+        return (int) input > 0;
     }
 
     private boolean checkRange(Object listOfRanges, Object input) {
         if (input == null) {
             return true;
         }
-        if (!(input instanceof Integer) || !(listOfRanges instanceof List<?> ranges)) {
-            return false;
-        }
 
         int value = (int) input;
+        List<?> ranges = (List<?>) listOfRanges;
+
         for (Object range : ranges) {
-            if (!(range instanceof int[])) {
-                return false;
-            }
             int start = ((int[]) range)[0];
             int end = ((int[]) range)[1];
-
             if (value < start || value > end) {
                 return false;
             }
         }
-
         return true;
     }
 }

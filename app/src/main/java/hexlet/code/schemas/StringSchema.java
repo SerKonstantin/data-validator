@@ -40,19 +40,13 @@ public class StringSchema extends BaseSchema {
         if (input == null) {
             return true;
         }
-        if (!(input instanceof String) || !(listOfLengths instanceof List<?> lengths)) {
-            return false;
-        }
 
+        List<?> lengths = (List<?>) listOfLengths;
         for (Object length : lengths) {
-            if (!(length instanceof Integer)) {
-                return false;
-            }
             if (input.toString().length() < (int) length) {
                 return  false;
             }
         }
-
         return true;
     }
 
@@ -60,19 +54,13 @@ public class StringSchema extends BaseSchema {
         if (input == null) {
             return true;
         }
-        if (!(input instanceof String) || !(listOfSubstrings instanceof List<?> substrings)) {
-            return false;
-        }
 
+        List<?> substrings = (List<?>) listOfSubstrings;
         for (Object substring : substrings) {
-            if (!(substring instanceof String)) {
-                return false;
-            }
             if (!input.toString().contains((String) substring)) {
                 return false;
             }
         }
-
         return true;
     }
 }
