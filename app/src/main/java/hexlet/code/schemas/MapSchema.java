@@ -9,6 +9,7 @@ public class MapSchema extends BaseSchema {
     {
         checkMethods.put("required", this::checkRequired);
         checkMethods.put("sizeOf", this::checkSizeOf);
+        checkMethods.put("shape", this::checkShape);
     }
 
     // Section with methods to populate checking requirements (map located in superclass)
@@ -19,6 +20,11 @@ public class MapSchema extends BaseSchema {
 
     public MapSchema sizeOf(int size) {
         requirements.computeIfAbsent("sizeOf", value -> new ArrayList<>()).add(size);
+        return this;
+    }
+
+    public MapSchema shape(Map<String, BaseSchema> schemas) {
+        requirements.computeIfAbsent("shape", value -> new ArrayList<>()).add(schemas);
         return this;
     }
 
@@ -35,20 +41,39 @@ public class MapSchema extends BaseSchema {
         if (input == null) {
             return true;
         }
-        if (!(input instanceof Map<?, ?>) || !(listOfSizes instanceof List<?> sizes)) {
-            return false;
-        }
 
         int inputSize = ((Map<?, ?>) input).size();
+        List<?> sizes = (List<?>) listOfSizes;
+
         for (Object size : sizes) {
-            if (!(size instanceof Integer)) {
-                return false;
-            }
             if (inputSize != (int) size) {
                 return false;
             }
         }
+        return true;
+    }
 
+    private boolean checkShape(Object parameters, Object input) {
+        if (input == null) {
+            return true;
+        }
+
+        List<?> listOfSchemas = (List<?>) parameters;
+        Map<?, ?> inputMap = (Map<?, ?>) input;
+
+        for (Map.Entry<?, ?> field : inputMap.entrySet()) {
+            String fieldName = (String) field.getKey();
+            Object fieldValue = field.getValue();
+
+            for (Object schemas : listOfSchemas) {
+                Map<?, ?> currentRules = (Map<?, ?>) schemas;
+
+                BaseSchema rule = (BaseSchema) currentRules.get(fieldName);
+                if (rule != null && !rule.isValid(fieldValue)) {
+                    return false;
+                }
+            }
+        }
         return true;
     }
 }
