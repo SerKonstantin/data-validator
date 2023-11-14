@@ -8,7 +8,7 @@ public class MapSchema extends BaseSchema {
     // Section to populate checkMethods (map located in superclass)
     {
         checkMethods.put("required", this::checkRequired);
-        checkMethods.put("sizeOf", this::checkSizeOf);
+        checkMethods.put("sizeof", this::checkSizeOf);
         checkMethods.put("shape", this::checkShape);
     }
 
@@ -18,8 +18,8 @@ public class MapSchema extends BaseSchema {
         return this;
     }
 
-    public MapSchema sizeOf(int size) {
-        requirements.computeIfAbsent("sizeOf", value -> new ArrayList<>()).add(size);
+    public MapSchema sizeof(int size) {
+        requirements.computeIfAbsent("sizeof", value -> new ArrayList<>()).add(size);
         return this;
     }
 

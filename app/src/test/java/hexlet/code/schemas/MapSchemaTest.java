@@ -25,7 +25,7 @@ class MapSchemaTest {
         data.put("firstKey", Map.of("innerKey", 5));
         assertTrue(schema.isValid(data));
 
-        schema.sizeOf(2);
+        schema.sizeof(2);
         assertFalse(schema.isValid(data));
         data.put("secondKey", 8);
         assertTrue(schema.isValid(data));
@@ -33,7 +33,7 @@ class MapSchemaTest {
         assertFalse(schema.isValid(data));
 
         // Add new check to the list of checks, but it's not replacing previous sizeOf(2)
-        schema.sizeOf(3);
+        schema.sizeof(3);
         assertFalse(schema.isValid(data));
     }
 
@@ -45,7 +45,7 @@ class MapSchemaTest {
         Map<String, BaseSchema> schemas = new HashMap<>();
         schemas.put("name", v.string().required());
         schemas.put("age", v.number().positive());
-        schemas.put("child", v.map().sizeOf(2));
+        schemas.put("child", v.map().sizeof(2));
         schema.shape(schemas);
 
         Map<String, Object> human1 = new HashMap<>();

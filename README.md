@@ -67,7 +67,7 @@ schema.isValid(user3); // -> false, user name cannot be empty
 
 - Map Validation:
     - `map()`: Set up validator to check a map.
-    - `size(int exactSize)`: Verify the exact size of a map.
+    - `sizeof(int exactSize)`: Verify the exact size of a map.
     - `shape(Map<String, BaseSchema> validationRules)`: Define a map by specifying field names and their corresponding validation rules.
 
 
