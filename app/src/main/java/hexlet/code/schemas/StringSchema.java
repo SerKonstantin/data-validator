@@ -3,7 +3,7 @@ package hexlet.code.schemas;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StringSchema extends BaseSchema {
+public final class StringSchema extends BaseSchema {
     // Section to populate checkMethods (map located in superclass)
     {
         checkMethods.put("required", this::checkRequired);

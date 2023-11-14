@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MapSchema extends BaseSchema {
+public final class MapSchema extends BaseSchema {
     // Section to populate checkMethods (map located in superclass)
     {
         checkMethods.put("required", this::checkRequired);

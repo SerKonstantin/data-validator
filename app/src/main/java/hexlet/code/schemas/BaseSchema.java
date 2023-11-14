@@ -12,7 +12,7 @@ public abstract class BaseSchema {
 
     protected abstract boolean isValidInput(Object input);
 
-    public boolean isValid(Object input) {
+    public final boolean isValid(Object input) {
         if (!isValidInput(input)) {
             return false;
         }
