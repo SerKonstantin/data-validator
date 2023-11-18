@@ -1,14 +1,22 @@
 package hexlet.code.schemas;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 public abstract class BaseSchema {
-    // Requirements and checkMethods are populated from subclass
-    protected Map<String, List<Object>> requirements = new HashMap<>();
-    protected Map<String, BiPredicate<Object, Object>> checkMethods = new HashMap<>();
+    protected List<Predicate<Object>> checks;
+    protected boolean requiredFlag;
+
+    protected BaseSchema() {
+        this.checks = new ArrayList<>();
+        this.requiredFlag = false;
+    }
+
+    public BaseSchema required() {
+        requiredFlag = true;
+        return this;
+    }
 
     protected abstract boolean isValidInput(Object input);
 
@@ -17,10 +25,12 @@ public abstract class BaseSchema {
             return false;
         }
 
-        for (Map.Entry<String, List<Object>> entry : requirements.entrySet()) {
-            String typeOfCheck = entry.getKey();
-            List<Object> parameters = entry.getValue();
-            boolean isCurrentCheckPass = checkMethods.get(typeOfCheck).test(parameters, input);
+        if (input == null) {
+            return true;
+        }
+
+        for (Predicate<Object> check : checks) {
+            boolean isCurrentCheckPass = check.test(input);
             if (!isCurrentCheckPass) {
                 return false;
             }

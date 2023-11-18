@@ -1,66 +1,25 @@
 package hexlet.code.schemas;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Predicate;
 
 public final class StringSchema extends BaseSchema {
-    // Section to populate checkMethods (map located in superclass)
-    {
-        checkMethods.put("required", this::checkRequired);
-        checkMethods.put("minLength", this::checkMinLength);
-        checkMethods.put("substring", this::checkSubstring);
+    protected boolean isValidInput(Object input) {
+        if (requiredFlag) {
+            return input instanceof String && !input.equals("");
+        } else {
+            return input == null || input instanceof String;
+        }
     }
 
-    // Section with methods to populate checking requirements (map located in superclass)
-    public StringSchema required() {
-        requirements.computeIfAbsent("required", value -> new ArrayList<>()).add(true);
-        return this;
-    }
-
-    public StringSchema minLength(int minLength) {
-        requirements.computeIfAbsent("minLength", value -> new ArrayList<>()).add(minLength);
+    public StringSchema minLength(int length) {
+        Predicate<Object> checkMinLength = input -> input.toString().length() >= length;
+        checks.add(checkMinLength);
         return this;
     }
 
     public StringSchema contains(String substring) {
-        requirements.computeIfAbsent("substring", value -> new ArrayList<>()).add(substring);
+        Predicate<Object> checkContains = input -> input.toString().contains(substring);
+        checks.add(checkContains);
         return this;
-    }
-
-    // Section with methods to check each condition from requirements
-    protected boolean isValidInput(Object input) {
-        return input == null || input instanceof String;
-    }
-
-    private boolean checkRequired(Object parameters, Object input) {
-        return !(input == null || input.equals(""));
-    }
-
-    private boolean checkMinLength(Object listOfLengths, Object input) {
-        if (input == null) {
-            return true;
-        }
-
-        List<?> lengths = (List<?>) listOfLengths;
-        for (Object length : lengths) {
-            if (input.toString().length() < (int) length) {
-                return  false;
-            }
-        }
-        return true;
-    }
-
-    private boolean checkSubstring(Object listOfSubstrings, Object input) {
-        if (input == null) {
-            return true;
-        }
-
-        List<?> substrings = (List<?>) listOfSubstrings;
-        for (Object substring : substrings) {
-            if (!input.toString().contains((String) substring)) {
-                return false;
-            }
-        }
-        return true;
     }
 }
