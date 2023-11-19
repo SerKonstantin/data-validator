@@ -18,7 +18,7 @@ class StringSchemaTest {
 
         schema.minLength(1);
         assertTrue(schema.isValid(null));
-        assertFalse(schema.isValid(""));
+        assertTrue(schema.isValid(""));
 
         schema.required();
         assertFalse(schema.isValid(""));

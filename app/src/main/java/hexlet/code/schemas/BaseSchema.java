@@ -13,15 +13,15 @@ public abstract class BaseSchema {
         this.requiredFlag = false;
     }
 
-    protected abstract boolean isValidInput(Object input);
+    protected abstract boolean isValidType(Object input);
 
     public final boolean isValid(Object input) {
-        if (!isValidInput(input)) {
-            return false;
+        if (input == null || (input instanceof String && ((String) input).isEmpty())) {
+            return !requiredFlag;
         }
 
-        if (input == null) {
-            return true;
+        if (!isValidType(input)) {
+            return false;
         }
 
         for (Predicate<Object> check : checks) {

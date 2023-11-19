@@ -3,12 +3,8 @@ package hexlet.code.schemas;
 import java.util.function.Predicate;
 
 public final class NumberSchema extends BaseSchema {
-    protected boolean isValidInput(Object input) {
-        if (requiredFlag) {
-            return input instanceof Integer;
-        } else {
-            return input == null || input instanceof Integer;
-        }
+    protected boolean isValidType(Object input) {
+        return input instanceof Integer;
     }
 
     public NumberSchema required() {

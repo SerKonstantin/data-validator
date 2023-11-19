@@ -3,12 +3,8 @@ package hexlet.code.schemas;
 import java.util.function.Predicate;
 
 public final class StringSchema extends BaseSchema {
-    protected boolean isValidInput(Object input) {
-        if (requiredFlag) {
-            return input instanceof String && !input.equals("");
-        } else {
-            return input == null || input instanceof String;
-        }
+    protected boolean isValidType(Object input) {
+        return input instanceof String;
     }
 
     public StringSchema required() {

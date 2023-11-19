@@ -4,12 +4,8 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 public final class MapSchema extends BaseSchema {
-    protected boolean isValidInput(Object input) {
-        if (requiredFlag) {
-            return input instanceof Map<?, ?>;
-        } else {
-            return input == null || input instanceof Map<?, ?>;
-        }
+    protected boolean isValidType(Object input) {
+        return input instanceof Map<?, ?>;
     }
 
     public MapSchema required() {
