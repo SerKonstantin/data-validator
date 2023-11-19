@@ -11,6 +11,11 @@ public final class NumberSchema extends BaseSchema {
         }
     }
 
+    public NumberSchema required() {
+        requiredFlag = true;
+        return this;
+    }
+
     public NumberSchema positive() {
         Predicate<Object> checkPositive = number -> (int) number > 0;
         checks.add(checkPositive);

@@ -11,6 +11,11 @@ public final class StringSchema extends BaseSchema {
         }
     }
 
+    public StringSchema required() {
+        requiredFlag = true;
+        return this;
+    }
+
     public StringSchema minLength(int length) {
         Predicate<Object> checkMinLength = input -> input.toString().length() >= length;
         checks.add(checkMinLength);

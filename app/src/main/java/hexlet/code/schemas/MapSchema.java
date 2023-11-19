@@ -12,6 +12,11 @@ public final class MapSchema extends BaseSchema {
         }
     }
 
+    public MapSchema required() {
+        requiredFlag = true;
+        return this;
+    }
+
     public MapSchema sizeof(int size) {
         Predicate<Object> checkSizeof = input -> ((Map<?, ?>) input).size() == size;
         checks.add(checkSizeof);

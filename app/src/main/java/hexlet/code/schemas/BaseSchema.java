@@ -13,11 +13,6 @@ public abstract class BaseSchema {
         this.requiredFlag = false;
     }
 
-    public BaseSchema required() {
-        requiredFlag = true;
-        return this;
-    }
-
     protected abstract boolean isValidInput(Object input);
 
     public final boolean isValid(Object input) {
