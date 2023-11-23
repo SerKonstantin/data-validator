@@ -5,13 +5,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class BaseSchema {
-    protected List<Predicate<Object>> checks;
-    protected boolean requiredFlag;
-
-    protected BaseSchema() {
-        this.checks = new ArrayList<>();
-        this.requiredFlag = false;
-    }
+    protected List<Predicate<Object>> checks = new ArrayList<>();
+    protected boolean requiredFlag = false;
 
     protected abstract boolean isValidType(Object input);
 
@@ -24,13 +19,6 @@ public abstract class BaseSchema {
             return false;
         }
 
-        for (Predicate<Object> check : checks) {
-            boolean isCurrentCheckPass = check.test(input);
-            if (!isCurrentCheckPass) {
-                return false;
-            }
-        }
-
-        return true;
+        return checks.stream().allMatch(check -> check.test(input));
     }
 }

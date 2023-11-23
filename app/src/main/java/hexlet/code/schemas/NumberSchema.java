@@ -13,8 +13,7 @@ public final class NumberSchema extends BaseSchema {
     }
 
     public NumberSchema positive() {
-        Predicate<Object> checkPositive = number -> (int) number > 0;
-        checks.add(checkPositive);
+        checks.add(number -> (int) number > 0);
         return this;
     }
 
@@ -22,9 +21,7 @@ public final class NumberSchema extends BaseSchema {
         // Make sure to have range look like "start <= input <= end"
         int normalizedStart = Math.min(start, end);
         int normalizedEnd = Math.max(start, end);
-        Predicate<Object> checkRange = number -> {
-            return (int) number >= normalizedStart && (int) number <= normalizedEnd;
-        };
+        Predicate<Object> checkRange = number -> (int) number >= normalizedStart && (int) number <= normalizedEnd;
         checks.add(checkRange);
         return this;
     }
