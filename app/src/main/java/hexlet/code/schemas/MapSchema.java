@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 public final class MapSchema extends BaseSchema {
-    protected boolean isValidType(Object input) {
-        return input instanceof Map<?, ?>;
+    public MapSchema() {
+        checks.put("required", input -> input instanceof Map<?, ?>);
     }
 
     public MapSchema required() {
@@ -14,7 +14,7 @@ public final class MapSchema extends BaseSchema {
     }
 
     public MapSchema sizeof(int size) {
-        checks.add(input -> ((Map<?, ?>) input).size() == size);
+        checks.put("sizeof", input -> ((Map<?, ?>) input).size() == size);
         return this;
     }
 
@@ -30,7 +30,7 @@ public final class MapSchema extends BaseSchema {
             });
         };
 
-        checks.add(checkShape);
+        checks.put("shape", checkShape);
         return this;
     }
 }

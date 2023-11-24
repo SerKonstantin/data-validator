@@ -12,7 +12,6 @@ class StringSchemaTest {
         Validator v = new Validator();
         StringSchema schema = v.string();
 
-        assertFalse(schema.isValid(5));
         assertTrue(schema.isValid(""));
         assertTrue(schema.isValid(null));
 
@@ -23,6 +22,7 @@ class StringSchemaTest {
         schema.required();
         assertFalse(schema.isValid(""));
         assertFalse(schema.isValid(null));
+        assertFalse(schema.isValid(5));
 
         assertTrue(schema.isValid("om"));
         schema.minLength(3);

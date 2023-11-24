@@ -3,8 +3,8 @@ package hexlet.code.schemas;
 import java.util.function.Predicate;
 
 public final class NumberSchema extends BaseSchema {
-    protected boolean isValidType(Object input) {
-        return input instanceof Integer;
+    public NumberSchema() {
+        checks.put("required", input -> input instanceof Integer);
     }
 
     public NumberSchema required() {
@@ -13,7 +13,7 @@ public final class NumberSchema extends BaseSchema {
     }
 
     public NumberSchema positive() {
-        checks.add(number -> (int) number > 0);
+        checks.put("positive", number -> (int) number > 0);
         return this;
     }
 
@@ -22,7 +22,7 @@ public final class NumberSchema extends BaseSchema {
         int normalizedStart = Math.min(start, end);
         int normalizedEnd = Math.max(start, end);
         Predicate<Object> checkRange = number -> (int) number >= normalizedStart && (int) number <= normalizedEnd;
-        checks.add(checkRange);
+        checks.put("range", checkRange);
         return this;
     }
 }

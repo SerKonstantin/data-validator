@@ -1,8 +1,8 @@
 package hexlet.code.schemas;
 
 public final class StringSchema extends BaseSchema {
-    protected boolean isValidType(Object input) {
-        return input instanceof String;
+    public StringSchema() {
+        checks.put("required", input -> input instanceof String && !((String) input).isEmpty());
     }
 
     public StringSchema required() {
@@ -11,12 +11,12 @@ public final class StringSchema extends BaseSchema {
     }
 
     public StringSchema minLength(int length) {
-        checks.add(input -> input.toString().length() >= length);
+        checks.put("minLength", input -> input.toString().length() >= length);
         return this;
     }
 
     public StringSchema contains(String substring) {
-        checks.add(input -> input.toString().contains(substring));
+        checks.put("contains", input -> input.toString().contains(substring));
         return this;
     }
 }

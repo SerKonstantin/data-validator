@@ -32,9 +32,8 @@ class MapSchemaTest {
         data.put("thirdKey", "value");
         assertFalse(schema.isValid(data));
 
-        // Add new check to the list of checks, but it's not replacing previous sizeOf(2)
         schema.sizeof(3);
-        assertFalse(schema.isValid(data));
+        assertTrue(schema.isValid(data));
     }
 
     @Test
